@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin page</title>
+</head>
+<body>
+<h2>Hello Admin!</h2>
+<hr/>
+<form th:action="@{/admin/usersinfo}" th:method="get">
+    <input type="submit" value="Show all users"/>
+</form>
+<br/>
+<form th:method="GET" th:action="@{/admin/new}">
+    <input type="submit" value="Add new user"/>
+</form>
+<br/>
+<input type="button" value="Back" onclick="history.go(-1)">
+<br/>
+<br/>
+
+<form th:action="@{/logout}" th:method="post">
+    <input type="submit" value="Logout">
+</form>
+<br/>
+<form th:action="@{/index}" th:method="get">
+    <input type="submit" value="Main page">
+</form>
+</body>
+</html>
