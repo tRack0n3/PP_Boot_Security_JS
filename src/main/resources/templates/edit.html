@@ -13,45 +13,53 @@
                 <label for="username">Enter a new name:</label>
                 <input type="text" th:field="*{username}" id="username">
             </div>
+
             <br/>
             <br/>
+
             <div class="field">
                 <label for="email">Enter a new Email:</label>
                 <input type="text" th:field="*{email}" id="email">
             </div>
+
             <br/>
             <br/>
+
             <div class="field">
                 <label for="password">Enter a new password:</label>
                 <input type="password" th:field="*{password}" id="password">
             </div>
-            <br/>
-            <br/>
 
             <br/>
             <br/>
-            <div class="form-group row align-items-center mb-3">
-                <label class="col-4 col-form-label text-center">Choose new role:</label>
-                <div class="col-8">
-                    <th:block th:each="role :${rolesList}">
-                        <input type="checkbox" th:field="*{roles}"
-                               th:text="${role.getRoleName()}" th:value="${role.getId()}" class="m-2" />
-                    </th:block>
-                </div>
+
+            <div>
+                <p>
+                    <label>Roles:
+                        <input type="checkbox" name="roles"
+                               th:each="role : ${rolesList}"
+                               th:text="${role.getRoleName()}"
+                               th:value="${role.getId()}"
+                               th:field="*{roles}"
+                        />
+                    </label>
+                </p>
             </div>
-            <br/>
-            <br/>
+
             <input type="submit" value="Confirm"/>
-            <br/>
         </form>
-    <br/>
+        <br/>
         <input type="button" value="Back" onclick="history.go(-1)">
+
         <br/>
         <br/>
+
         <form th:action="@{/logout}" th:method="post">
             <input type="submit" value="Logout">
         </form>
+
         <br/>
+
         <form th:action="@{/index}" th:method="get">
             <input type="submit" value="Main page">
         </form>
