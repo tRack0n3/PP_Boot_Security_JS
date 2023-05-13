@@ -23,17 +23,10 @@ public class RegistrationService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @Transactional
-    public void registrationForAdmin(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRoles(Collections.singleton(new Role("ROLE_ADMIN")));
-        userRepository.save(user);
-    }
 
     @Transactional
-    public void registrationForCommonUser(User user) {
+    public void userRegistration(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRoles(Collections.singleton(new Role("ROLE_USER")));
         userRepository.save(user);
     }
 }

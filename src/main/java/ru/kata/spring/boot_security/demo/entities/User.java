@@ -25,6 +25,7 @@ public class User implements UserDetails {
     private String username;
 
     @Column(name = "password")
+    @Size(min = 4, max = 100, message = "Incorrect length of the password")
     private String password;
 
     @Email(message = "Incorrect email")

@@ -28,6 +28,17 @@
 
         <br/>
         <br/>
+        <div class="form-group row align-items-center mb-3">
+            <label class="col-4 col-form-label text-center">Choose new role:</label>
+            <div class="col-8">
+                <th:block th:each="role :${rolesList}">
+                    <input type="checkbox" th:field="*{roles}"
+                           th:text="${role.getRoleName()}" th:value="${role.getId()}" class="m-2" />
+                </th:block>
+            </div>
+        </div>
+        <br/>
+        <br/>
 
         <input type="submit" value="Register"/>
     </form>

@@ -58,25 +58,7 @@ public class AuthController {
         if(bindingResult.hasErrors()) {
             return "registration";
         }
-        registrationService.registrationForCommonUser(user);
-
-        return "redirect:/login";
-    }
-
-    @GetMapping("/registration_admin_page")
-    public String adminRegistrationPage(@ModelAttribute("admin")User user) {
-
-        return "registration_admin_page";
-    }
-
-    @PostMapping("/registration_admin_page")
-    public String registerNewAdmin(@ModelAttribute("admin") @Valid User user,
-                                   BindingResult bindingResult){
-        userValidator.validate(user, bindingResult);
-        if(bindingResult.hasErrors()) {
-            return "registration_admin_page";
-        }
-        registrationService.registrationForAdmin(user);
+        registrationService.userRegistration(user);
 
         return "redirect:/login";
     }
