@@ -5,37 +5,52 @@
     <title></title>
 </head>
     <body>
-        <h1>Users list</h1>
+        <h2>Users list</h2>
+        <hr/>
         <div>
-            <table border="1">
+            <table th:border="1">
                 <tr>
                     <th scope="col">Id</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Surname</th>
-                    <th scope="col">Age</th>
-                    <th scope="col">Action</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Password</th>
+                    <th scope="row">Actions</th>
                 </tr>
-                <tr align="center" th:each="user : ${users}">
-                    <td width="200"> <p th:text="${user.getId()}">Id</p></td>
-                    <td width="200"> <p th:text="${user.getName()}">Name</p></td>
-                    <td width="200"> <p th:text="${user.getSurname()}">Surname</p></td>
-                    <td width="200"> <p th:text="${user.getAge()}">Age</p></td>
+
+                <tr th:align="center" th:each="user : ${users}">
+                    <td th:width="200"> <p th:text="${user.getId()}">Id</p></td>
+                    <td th:width="200"> <p th:text="${user.getUsername()}">Name</p></td>
+                    <td th:width="200"> <p th:text="${user.getEmail()}">Email</p></td>
+                    <td th:width="200"> <p th:text="${user.getPassword()}">Password</p></td>
+
                     <td>
-                        <form method="GET" th:action="@{/users/{id}/edit(id=${user.getId()})}">
+                        <form method="GET" th:action="@{/admin/user/{id}(id=${user.getId()})}">
+                            <input type="submit" value="User info">
+                        </form>
+                        <form method="GET" th:action="@{/admin/{id}/edit(id=${user.getId()})}">
                             <input type="submit" value="Edit user">
                         </form>
-                        <form th:method="DELETE" th:action="@{/users/{id}(id=${user.getId()})}">
+                        <form th:method="DELETE" th:action="@{/admin/{id}(id=${user.getId()})}">
                             <input type="submit" value="Delete user"/>
                         </form>
                     </td>
                 </tr>
+
             </table>
-            <hr/>
-            <h2>Add User</h2>
-            <input type = "button" value = "Create new user"
-                   onclick = "window.location.href = 'users/new'"/>
+            <br/>
+            <form th:method="GET" th:action="@{/admin/new}">
+                <input type="submit" value="Add new user"/>
+            </form>
+            <br/>
+            <input type="button" value="Back" onclick="history.go(-1)">
+            <br/>
+            <br/>
             <form th:action="@{/logout}" th:method="post">
                 <input type="submit" value="Logout">
+            </form>
+            <br/>
+            <form th:action="@{/index}" th:method="get">
+                <input type="submit" value="Main page">
             </form>
         </div>
     </body>

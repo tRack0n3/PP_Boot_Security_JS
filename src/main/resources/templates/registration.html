@@ -5,20 +5,38 @@
   <title>Registration page</title>
 </head>
   <body>
-    <form th:method="post" th:action="@{/auth/registration}" th:object="${user}">
+    <h2>User registration</h2>
+    <hr/>
+    <form th:method="post" th:action="@{/registration}" th:object="${user}">
         <label for="username">Enter the username:</label>
         <input type="text" th:field="*{username}" id="username"/>
         <div style="color:red" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username Error</div>
+
         <br/>
+        <br/>
+
         <label for="email">Enter your email:</label>
         <input type="text" th:field="*{email}" id="email"/>
         <div style="color:red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</div>
+
         <br/>
+        <br/>
+
         <label for="username">Enter the password:</label>
         <input type="password" th:field="*{password}" id="password"/>
         <div style="color:red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</div>
+
         <br/>
-        <input type="submit" value="Register!"/>
+        <br/>
+
+        <input type="submit" value="Register"/>
+    </form>
+  <br/>
+    <input type="button" value="Back" onclick="history.go(-1)">
+  <br/>
+  <br/>
+    <form th:action="@{/index}" th:method="get">
+        <input type="submit" value="Main page">
     </form>
   </body>
 </html>
