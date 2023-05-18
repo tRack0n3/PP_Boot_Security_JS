@@ -10,6 +10,8 @@ import ru.kata.spring.boot_security.demo.entities.User;
 import ru.kata.spring.boot_security.demo.services.AdminService;
 import ru.kata.spring.boot_security.demo.services.RoleService;
 
+import java.security.Principal;
+
 
 @Controller
 @RequestMapping("/admin")
@@ -23,16 +25,20 @@ public class AdminController {
         this.roleService = roleService;
     }
 
-    @GetMapping("/adminpage")
-    public String adminPage() {
+    @GetMapping()
+    public String adminPage(Model model, Model role, Principal principal){
+        role.addAttribute("rolesList", roleService.getRolesList());
+        model.addAttribute("users", adminService.showAllUsers());
+        User princ = adminService.getUserByUsername(principal.getName());
+        model.addAttribute("princ", princ);
+        model.addAttribute("newUser", new User());
         return "adminpage";
     }
 
-    @GetMapping("/usersinfo")
-    public String showUsersInfo(Model model, Model role){
-        role.addAttribute("rolesList", roleService.getRolesList());
-        model.addAttribute("users", adminService.showAllUsers());
-        return "usersinfo";
+    @GetMapping("/user")
+    public String userPageInfo(Model model, Principal principal) {
+        model.addAttribute("user",adminService.getUserByUsername(principal.getName()));
+        return "user";
     }
 
     @GetMapping("/user/{id}")
@@ -50,8 +56,8 @@ public class AdminController {
 
     @PostMapping("/new")
     public String add(@ModelAttribute("user") User user){
-
-        return "redirect:usersinfo";
+        adminService.addUser(user);
+        return "redirect:/admin";
     }
 
     @GetMapping("/{id}/edit")
@@ -67,14 +73,14 @@ public class AdminController {
                          @PathVariable("id") Long id) {
         adminService.editUser(id, user);
 
-        return "redirect:usersinfo";
+        return "redirect:/admin";
     }
 
     @DeleteMapping("/{id}")
     public String deleteUser(@PathVariable("id") Long id) {
         adminService.deleteUser(id);
 
-        return "redirect:usersinfo";
+        return "redirect:/admin";
     }
 
 }

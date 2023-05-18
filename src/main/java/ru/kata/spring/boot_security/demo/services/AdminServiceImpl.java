@@ -3,10 +3,12 @@ package ru.kata.spring.boot_security.demo.services;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import ru.kata.spring.boot_security.demo.entities.Role;
 import ru.kata.spring.boot_security.demo.entities.User;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
 import javax.transaction.Transactional;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,16 +60,22 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     @Transactional
-    public void editUser(Long id, User updatedUser) {
+    public void editUser(Long id, User user) {
+        Collection<Role> roles = user.getRoles();
         Optional<User> optionalUser = userRepository.findById(id);
         if (optionalUser.isPresent()) {
             User editUser = optionalUser.get();
-            editUser.setId(updatedUser.getId());
-            editUser.setUsername(updatedUser.getUsername());
-            editUser.setEmail(updatedUser.getEmail());
-            editUser.setRoles(updatedUser.getRoles());
-            if (!editUser.getPassword().equals(updatedUser.getPassword())) {
-                editUser.setPassword(encoder.encode(updatedUser.getPassword()));
+            editUser.setId(user.getId());
+            editUser.setName(user.getName());
+            editUser.setLastName(user.getLastName());
+            editUser.setAge(user.getAge());
+            editUser.setUsername(user.getUsername());
+            if(roles == null){
+            } else {
+                editUser.setRoles(user.getRoles());
+            }
+            if (!editUser.getPassword().equals(user.getPassword())) {
+                editUser.setPassword(encoder.encode(user.getPassword()));
             }
             userRepository.save(editUser);
         }
