@@ -23,4 +23,9 @@ public class RoleServiceImpl implements RoleService{
         return roleRepository.findAll();
     }
 
+    @Override
+    public Role getRole(Long id) {
+        return roleRepository.getRoleById(id);
+    }
+
 }

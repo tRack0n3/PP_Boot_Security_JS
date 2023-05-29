@@ -8,5 +8,7 @@ public interface RoleService {
 
     List<Role> getRolesList();
 
+    Role getRole(Long id);
+
 
 }

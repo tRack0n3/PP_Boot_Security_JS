@@ -1,12 +1,16 @@
 package ru.kata.spring.boot_security.demo.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-;
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -20,18 +24,28 @@ public class User implements UserDetails {
     private Long id;
 
     @Column(name = "name")
+    @NotEmpty(message = "Name should not be empty")
+    @Size(min= 2, max = 30, message = "Name length should be between 2 and 30 characters")
     private String name;
 
+    @NotEmpty(message = "Last name should not be empty")
+    @Size(min = 2, max = 30, message = "Last name length should be between 2 and 30 characters")
     @Column(name = "last_name")
     private String lastName;
 
+//    @NotEmpty(message = "Age should not be empty")
+//    @Min(value = 0, message = "Age should be greater than 0")
     @Column(name="age")
     private int age;
 
     @Column(name = "email", nullable = false, unique = true)
+    @Email
+    @NotEmpty(message = "Email should be not empty")
     private String username;
 
     @Column(name = "password", nullable = false)
+//    @NotEmpty(message = "Password should be not empty")
+//    @Min(value = 4, message = "Password length should be greater than 4")
     private String password;
 
 
@@ -39,12 +53,12 @@ public class User implements UserDetails {
     @JoinTable(name = "users_roles",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
-    private Set<Role> roles;
+    private Collection<Role> roles;
 
     public User() {
     }
 
-    public User(String name, String lastName, String username, String password, Set<Role> roles) {
+    public User(String name, String lastName, String username, String password, Collection<Role> roles) {
         this.name = name;
         this.lastName = lastName;
         this.username = username;
@@ -100,11 +114,11 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public Set<Role> getRoles() {
+    public Collection<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<Role> roles) {
+    public void setRoles(Collection<Role> roles) {
         this.roles = roles;
     }
 

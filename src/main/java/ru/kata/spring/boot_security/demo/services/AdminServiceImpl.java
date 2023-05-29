@@ -4,13 +4,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import ru.kata.spring.boot_security.demo.entities.Role;
+
 import ru.kata.spring.boot_security.demo.entities.User;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
 import javax.transaction.Transactional;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional
@@ -27,6 +26,9 @@ public class AdminServiceImpl implements AdminService {
     @Override
     @Transactional
     public List<User> showAllUsers() {
+//        List<User> usersList = new ArrayList<>();
+//        usersList.add(new User("Vladislav", "Nalobin", "admin@gmail.com", "admin", Collections.singleton(new Role("ADMIN"))));
+//        return usersList;
         return userRepository.findAll();
     }
 
@@ -39,9 +41,8 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     @Transactional
-    public User getUserById(Long id) {
-        Optional<User> userFromDb = userRepository.findById(id);
-        return userFromDb.orElse(new User());
+    public Optional<User> getUserById(Long id) {
+        return userRepository.findById(id);
     }
 
     @Override
