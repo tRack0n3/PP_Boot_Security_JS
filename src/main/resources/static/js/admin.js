@@ -3,6 +3,8 @@ $(async function(){
     await getTable();
 })
 
+let roles = document.getElementById('roles');
+
 const fetchUser = {
     head: {
         'Accept': 'application/json',
@@ -12,7 +14,7 @@ const fetchUser = {
 
     getUsers: async () => await fetch(`/api/admin/users`),
     getUser: async (id) => await fetch(`/api/admin/user/${id}`),
-    updateUser: async (id, user) => await fetch(`/api/admin/edit_user/${id}`, {
+    updateUser: async (id, user) => await fetch(`/api/admin/user/${id}`, {
         method: 'PATCH',
         headers: fetchUser.head,
         body: JSON.stringify(user)
@@ -31,20 +33,20 @@ async function getTable() {
         .then(response => response.json())
         .then(users => {
             users.forEach(user => {
-                let roleUser = '';
+                let rolesUser ='';
                 for (let role of user.roles) {
-                    roleUser += role.value;
-                    roleUser += ' ';
+                    rolesUser += role.value;
+                    rolesUser += ' ';
                 }
                 let usersTable =
-                    `$(<tr>
+                    `$(<tr th:object="${user}">
                         <td>${user.id}</td>
                         <td>${user.name}</td>
                         <td>${user.lastName}</td>
                         <td>${user.age}</td>
                         <td>${user.username}</td>
-                        <td>${user.roles}</td>
-                        <td><a href="/api/admin/edit_user/${user.id}" class="btn btn-primary eBtn">Edit</a></td>
+                        <td>${rolesUser}</td>
+                        <td><a href="/api/admin/user/${user.id}" class="btn btn-primary eBtn">Edit</a></td>
                         <td><a href="/api/admin/user/${user.id}" class="btn btn-danger dBtn">Delete</a></td>
                     </tr>)`;
                 table.append(usersTable);
@@ -56,15 +58,16 @@ async function getTable() {
         $.get(href, function (user) {
             modalUpdateUser(user.id);
         });
-        $(' .editModalClass #editModal').modal();
+        $(' .editModalClass #editModal').modal('show');
     });
+
     $(' .table .dBtn').on('click', function (event) {
         event.preventDefault();
         const href = $(this).attr('href');
         $.get(href, function (user) {
             modalDeleteUser(user.id);
         });
-        $(' .deleteModalClass #deleteModal').modal();
+        $(' .deleteModalClass #deleteModal').modal('show');
     });
 }
 
@@ -75,37 +78,68 @@ async function modalUpdateUser(id) {
         .then(response => response.json())
         .then(user => {
             let modalBody =
-                `<div class="form-group">
-                    <label htmlFor="idEdit">ID</label>
-                    <input type="text" class="form-control" value="${user.id}" id="idEdit" disabled>
+                `<div class="mb-3">
+                      <label for="idEdit"
+                             class="col-form-label"><b>ID</b></label>
+                      <input type="text"
+                             value="${user.id}" name="id"
+                             class="form-control" id="idEdit"
+                             readonly/>
                 </div>
-                <div class="form-group">
-                    <label htmlFor="nameEdit">First Name</label>
-                    <input type="text" class="form-control" value="${user.name}" id="nameEdit" placeholder="First Name"/>
+                <div class="mb-3">
+                     <label for="nameEdit"
+                            class="col-form-label"><b>First Name</b></label>
+                     <input type="text"
+                            value="${user.name}" name="name"
+                            class="form-control" id="nameEdit"
+                            required minlength="2" maxlength="20"/>
                 </div>
-                <div class="form-group">
-                    <label htmlFor="lastNameEdit">Last Name</label>
-                    <input type="text" class="form-control" value="${user.lastName}" id="lastNameEdit" placeholder="Last Name"/>
+                <div class="mb-3">
+                     <label for="lastNameEdit"
+                            class="col-form-label"><b>Last Name</b></label>
+                     <input type="text"
+                            value="${user.lastName}"
+                            name="lastName"
+                            class="form-control" id="lastNameEdit"
+                            required minlength="2" maxlength="20"/>
                 </div>
-                <div class="form-group">
-                    <label htmlFor="ageEdit">Age</label>
-                    <input type="text" class="form-control" value="${user.age}" id="ageEdit" placeholder="Age"/>
+                <div class="mb-3">
+                     <label for="ageEdit"
+                            class="col-form-label"><b>Age</b></label>
+                     <input type="text"
+                            value="${user.age}"
+                            name="age"
+                            class="form-control" id="ageEdit"
+                            required minlength="2" maxlength="20"/>
                 </div>
-                <div class="form-group">
-                    <label htmlFor="usernameEdit">Email</label>
-                    <input type="email" class="form-control" value="${user.age}" id="usernameEdit" placeholder="Email"/>
+                <div class="mb-3">
+                     <label for="usernameEdit"
+                            class="col-form-label"><b>Email</b></label>
+                     <input type="email"
+                            value="${user.username}"
+                            name="username"
+                            class="form-control" id="usernameEdit"/>
                 </div>
-                <div class="form-group">
-                    <label htmlFor="passwordEdit">Password</label>
-                    <input type="password" class="form-control" value="${user.age}" id="passwordEdit" placeholder="Password"/>
+                <div class="mb-3">
+                     <label for="passEdit"
+                            class="col-form-label"><b>Password</b></label>
+                     <input type="password"
+                            name="password"
+                            value="${user.password}"
+                            class="form-control" id="passEdit"
+                            required minlength="2" maxlength="20"/>
                 </div>
-                <div class="form-group">
-                    <label htmlFor="rolesIdEdit">Role</label>
-                    <select class="custom-select" id="rolesIdEdit" name="rolesId" multiple>
-                        <option value="2">USER</option>
-                        <option value="1">ADMIN</option>
-                    </select>
-                </div>`
+                <div class="mb-3">
+                     <label for="rolesEdit"><b>Role</b></label>
+                     <select class="form-control" id="rolesEdit"
+                             name="roles"
+                             multiple="multiple">
+                     <option foreach="role : ${user.roles}"
+                             value="${role}"
+                             text="${role}">Role name</option>
+                     </select>
+                </div>
+                     `
             modal.find(' .modal-body').append(modalBody);
 
             let modalFooter =
@@ -146,37 +180,71 @@ async function modalDeleteUser(id) {
         .then(response => response.json())
         .then(user => {
             let modalBody =
-                `<div class="form-group">
-                    <label htmlFor="idEdit">ID</label>
-                    <input type="text" class="form-control" value="${user.id}" id="idEdit" disabled>
+                `<div className="mb-3">
+                    <label htmlFor="idDelete"
+                           className="col-form-label"><b>ID</b></label>
+                    <input type="text"
+                           th:value="${user.id}" name="id"
+                           className="form-control" id="idDelete"
+                           disabled/>
                 </div>
-                <div class="form-group">
-                    <label htmlFor="nameEdit">First Name</label>
-                    <input type="text" class="form-control" value="${user.name}" id="nameEdit" disabled/>
+                <div className="mb-3">
+                    <label htmlFor="nameDelete"
+                           className="col-form-label"><b>First
+                        Name</b></label>
+                    <input type="text"
+                           th:value="${user.name}" name="name"
+                           className="form-control" id="nameDelete"
+                           required minLength="2" maxLength="20"
+                           disabled/>
                 </div>
-                <div class="form-group">
-                    <label htmlFor="lastNameEdit">Last Name</label>
-                    <input type="text" class="form-control" value="${user.lastName}" id="lastNameEdit" disabled/>
+                <div className="mb-3">
+                    <label htmlFor="lastNameDelete"
+                           className="col-form-label"><b>Last
+                        Name</b></label>
+                    <input type="text"
+                           th:value="${user.lastName}"
+                           name="lastName"
+                           className="form-control"
+                           id="lastNameDelete"
+                           required minLength="2" maxLength="20"
+                           disabled/>
                 </div>
-                <div class="form-group">
-                    <label htmlFor="ageEdit">Age</label>
-                    <input type="text" class="form-control" value="${user.age}" id="ageEdit" disabled/>
+                <div className="mb-3">
+                    <label htmlFor="ageEdit"
+                           className="col-form-label"><b>Age</b></label>
+                    <input type="text"
+                           th:value="${user.age}"
+                           name="age"
+                           className="form-control" id="ageDelete"
+                           required minLength="2" maxLength="20"
+                           disabled/>
                 </div>
-                <div class="form-group">
-                    <label htmlFor="usernameEdit">Email</label>
-                    <input type="email" class="form-control" value="${user.age}" id="usernameEdit" disabled/>
+                <div className="mb-3">
+                    <label htmlFor="UsernameDelete"
+                           className="col-form-label"><b>Email</b></label>
+                    <input type="email"
+                           th:value="${user.username}"
+                           name="username"
+                           className="form-control"
+                           id="UsernameDelete"
+                           disabled/>
                 </div>
-                <div class="form-group">
-                    <label htmlFor="passwordEdit">Password</label>
-                    <input type="password" class="form-control" value="${user.age}" id="passwordEdit" disabled/>
-                </div>
-                <div class="form-group">
-                    <label htmlFor="rolesIdEdit">Role</label>
-                    <select class="custom-select" id="rolesIdEdit" name="rolesId" multiple disabled="true">
-                        <option value="1">USER</option>
-                        <option value="2">ADMIN</option>
+                <div className="mb-3">
+                    <label htmlFor="rolesDelete"><b>Role</b></label>
+                    <select className="form-control"
+                            id="rolesDelete"
+                            name="roles"
+                            multiple="multiple" disabled>
+                        <option th:each="role : ${rolesList}"
+                                th:value="${role.getId()}"
+                                th:text="${role.getRoleName()}">
+                            Role
+                            name
+                        </option>
                     </select>
-                </div>`
+                </div>
+            `
             modal.find(' .modal-body').append(modalBody);
 
             let modalFooter =
