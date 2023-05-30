@@ -44,7 +44,7 @@ public class RestApiController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @PutMapping("/edit_user/{id}")
+    @PatchMapping("/edit_user/{id}")
     public ResponseEntity<HttpStatus> update(@RequestBody User user,
                                        @PathVariable("id") Long id) {
         this.adminService.editUser(id, user);

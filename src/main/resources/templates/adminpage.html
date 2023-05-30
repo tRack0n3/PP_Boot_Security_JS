@@ -202,13 +202,13 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr th:each="user : ${users}">
-                                    <td th:text="${user.id}"></td>
-                                    <td th:text="${user.name}"></td>
-                                    <td th:text="${user.lastName}"></td>
-                                    <td th:text="${user.age}"></td>
-                                    <td th:text="${user.username}"></td>
-                                    <td th:text="${user.roles}"></td>
+                                <tr th:object="${admin}">
+                                    <td th:text="${admin.id}"></td>
+                                    <td th:text="${admin.name}"></td>
+                                    <td th:text="${admin.lastName}"></td>
+                                    <td th:text="${admin.age}"></td>
+                                    <td th:text="${admin.username}"></td>
+                                    <td th:text="${admin.roles}"></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -221,6 +221,6 @@
 </div>
 </body>
 <script type="text/javascript" src="webjars/jquery/3.5.1/jquery.min.js"></script>
-<script type="text/javascript" src="webjars/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="webjars/bootstrap/5.0.2/js/bootstrap.min.js"></script>
 <script src="/js/admin.js"></script>
 </html>

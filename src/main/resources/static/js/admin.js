@@ -13,7 +13,7 @@ const fetchUser = {
     getUsers: async () => await fetch(`/api/admin/users`),
     getUser: async (id) => await fetch(`/api/admin/user/${id}`),
     updateUser: async (id, user) => await fetch(`/api/admin/edit_user/${id}`, {
-        method: 'PUT',
+        method: 'PATCH',
         headers: fetchUser.head,
         body: JSON.stringify(user)
     }),
@@ -50,8 +50,8 @@ async function getTable() {
                 table.append(usersTable);
             })
         })
-    $(' .table .eBtn').on('click',  (e) => {
-        e.preventDefault();
+    $(' .table .eBtn').on('click',  function (event) {
+        event.preventDefault();
         const href = $(this).attr('href');
         $.get(href, function (user) {
             modalUpdateUser(user.id);
