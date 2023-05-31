@@ -27,13 +27,13 @@ public class RestApiController {
         this.roleService = roleService;
     }
 
-    @GetMapping({"/users"})
+    @GetMapping("/users")
     public List<User> getUsers() {
         return adminService.showAllUsers();// Jackson автоматически конвертирует объекты в JSON
 
     }
 
-    @GetMapping({"/user/{id}"})
+    @GetMapping("/user/{id}")
     public ResponseEntity<Optional> getUser(@PathVariable("id") Long id) {
         Optional<User> foundUser = adminService.getUserById(id);
 
@@ -47,22 +47,22 @@ public class RestApiController {
     }
 
     // @RequestBody - принимает JSON от клиента и конвертирует его в Java объекты
-    @PostMapping({"/new"})
+    @PostMapping("/new")
     public ResponseEntity<HttpStatus> create (@RequestBody User user) {
         this.adminService.addUser(user);
 
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @PatchMapping({"/user/{id}"})
+    @PatchMapping("/user/{id}")
     public ResponseEntity<HttpStatus> update(@RequestBody User user,
-                                       @PathVariable("id") Long id) {
+                                             @PathVariable("id") Long id) {
         this.adminService.editUser(id, user);
 
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @DeleteMapping({"/user/{id}"})
+    @DeleteMapping("/user/{id}")
     public ResponseEntity<HttpStatus> delete(@PathVariable("id") Long id) {
         this.adminService.deleteUser(id);
 

@@ -19,7 +19,7 @@
             <div class="w-50 mx-auto">
 
                 <form name="form-signin" method="post" action="/process_login">
-                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    <!--<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>-->
                     <h2 class="form-signin-heading">Please sign in</h2>
                     <br/>
                     <label for="username" class="sr-only">Enter the username:</label>
@@ -50,6 +50,7 @@
                 </div>
             </div>
         </div>
+    </div>
     </div>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"

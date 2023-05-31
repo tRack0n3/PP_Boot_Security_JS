@@ -11,7 +11,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
             crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
@@ -80,7 +79,7 @@
                                             <th>Delete</th>
                                         </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody id="tableBodyAdmin">
                                         </tbody>
                                     </table>
                                 </div>
@@ -98,8 +97,73 @@
                                                     aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body col-md text-center">
-                                        </div>
-                                        <div class="modal-footer">
+                                            <form id="editUserForm">
+                                                <div class="mb-3">
+                                                    <label for="idEdit"
+                                                           class="col-form-label"><b>ID</b></label>
+                                                    <input type="text"
+                                                           th:value="${user.id}" th:name="id"
+                                                           class="form-control" id="idEdit"
+                                                           readonly/>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="nameEdit"
+                                                           class="col-form-label"><b>First Name</b></label>
+                                                    <input type="text"
+                                                           th:value="${user.name}" th:name="name"
+                                                           class="form-control" id="nameEdit"
+                                                           required minlength="2" maxlength="20"/>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="lastNameEdit"
+                                                           class="col-form-label"><b>Last Name</b></label>
+                                                    <input type="text"
+                                                           th:value="${user.lastName}"
+                                                           th:name="lastName"
+                                                           class="form-control" id="lastNameEdit"
+                                                           required minlength="2" maxlength="20"/>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="ageEdit"
+                                                           class="col-form-label"><b>Age</b></label>
+                                                    <input type="text"
+                                                           th:value="${user.age}"
+                                                           th:name="age"
+                                                           class="form-control" id="ageEdit"
+                                                           required minlength="2" maxlength="20"/>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="usernameEdit"
+                                                           class="col-form-label"><b>Email</b></label>
+                                                    <input type="email"
+                                                           th:value="${user.username}"
+                                                           th:name="username"
+                                                           class="form-control" id="usernameEdit"/>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="passEdit"
+                                                           class="col-form-label"><b>Password</b></label>
+                                                    <input type="password"
+                                                           th:name="password"
+                                                           th:value="${user.password}"
+                                                           class="form-control" id="passEdit"
+                                                           required minlength="2" maxlength="20"/>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="rolesEdit" class="font-weight-bold"
+                                                           size="2">Role</label>
+                                                    <select class="form-control" id="rolesEdit" th:name="roles"
+                                                            multiple>
+                                                    </select>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary "
+                                                            data-bs-dismiss="modal" id="buttonClose">Close
+                                                    </button>
+                                                    <button type="submit" class="btn btn-primary buttonUpdate">Edit
+                                                    </button>
+                                                </div>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
@@ -119,15 +183,78 @@
                                                     aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body col-md text-center">
-                                        </div>
-                                        <div class="modal-footer">
+                                            <form id="deleteUserForm">
+                                                <div class="mb-3">
+                                                    <label htmlFor="idDelete"
+                                                           class="col-form-label"><b>ID</b></label>
+                                                    <input type="text"
+                                                           th:value="${user.id}" name="id"
+                                                           class="form-control" id="idDelete"
+                                                           disabled/>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label htmlFor="nameDelete"
+                                                           class="col-form-label"><b>First Name</b></label>
+                                                    <input type="text"
+                                                           th:value="${user.name}" name="name"
+                                                           class="form-control" id="nameDelete"
+                                                           required minLength="2" maxLength="20"
+                                                           disabled/>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label htmlFor="lastNameDelete"
+                                                           class="col-form-label"><b>Last Name</b></label>
+                                                    <input type="text"
+                                                           th:value="${user.lastName}"
+                                                           name="lastName"
+                                                           class="form-control"
+                                                           id="lastNameDelete"
+                                                           required minLength="2" maxLength="20"
+                                                           disabled/>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label htmlFor="ageDelete"
+                                                           class="col-form-label"><b>Age</b></label>
+                                                    <input type="text"
+                                                           th:value="${user.age}"
+                                                           name="age"
+                                                           class="form-control" id="ageDelete"
+                                                           required minLength="2" maxLength="20"
+                                                           disabled/>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label htmlFor="usernameDelete"
+                                                           class="col-form-label"><b>Email</b></label>
+                                                    <input type="email"
+                                                           th:value="${user.username}"
+                                                           name="username"
+                                                           class="form-control"
+                                                           id="usernameDelete"
+                                                           disabled/>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="rolesDelete" class="font-weight-bold"
+                                                           size="2">Role</label>
+                                                    <select class="form-control" id="rolesDelete" th:name="roles"
+                                                            multiple
+                                                            disabled>
+                                                    </select>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                            id="buttonCloseDelete"
+                                                            data-bs-dismiss="modal">Close
+                                                    </button>
+                                                    <button type="submit" class="btn btn-danger " id="buttonDelete">
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-
                         <div class="tab-pane fade" id="newUser">
                             <div class="card">
                                 <h5 class="card-header">Add new user</h5>
@@ -135,7 +262,8 @@
                                     <form th:method="POST" th:action="@{/adm}" th:object="${newUser}">
                                         <label class="font-weight-bold" for="firstNameNew">First name</label>
                                         <br>
-                                        <input class="form-control" type="text" required minlength="2" maxlength="15"
+                                        <input class="form-control" type="text" required minlength="2"
+                                               maxlength="15"
                                                th:field="*{name}"
                                                id="firstNameNew"
                                                style="height: 30px; width: 300px; margin: 0 auto"
@@ -143,7 +271,8 @@
                                         <br>
                                         <label class="font-weight-bold" for="lastNameNew">Last name</label>
                                         <br>
-                                        <input class="form-control" type="text" required minlength="2" maxlength="15"
+                                        <input class="form-control" type="text" required minlength="2"
+                                               maxlength="15"
                                                th:field="*{lastName}"
                                                id="lastNameNew"
                                                style="height: 30px; width: 300px; margin: 0 auto"
@@ -230,3 +359,4 @@
 <script type="text/javascript" src="webjars/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <script src="/js/admin.js"></script>
 </html>
+

@@ -36,15 +36,7 @@ public class AdminController {
     }
 
     @PostMapping("/adm")
-    public String add(@ModelAttribute("user") User user,
-                @RequestParam(value = "rolesId") Long rolesId) {
-        if (rolesId == 2) {
-            user.setRoles(Collections.singleton(roleService.getRole(1L)));
-        } else if (rolesId == 1){
-            user.setRoles(Collections.singleton(roleService.getRole(2L)));
-        }else {
-            user.setRoles(roleService.getRolesList());
-        }
+    public String add(@ModelAttribute("user") User user) {
         adminService.addUser(user);
         return "redirect:/adm";
     }

@@ -26,9 +26,6 @@ public class AdminServiceImpl implements AdminService {
     @Override
     @Transactional
     public List<User> showAllUsers() {
-//        List<User> usersList = new ArrayList<>();
-//        usersList.add(new User("Vladislav", "Nalobin", "admin@gmail.com", "admin", Collections.singleton(new Role("ADMIN"))));
-//        return usersList;
         return userRepository.findAll();
     }
 

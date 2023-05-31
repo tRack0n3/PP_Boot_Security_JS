@@ -1,272 +1,177 @@
 
-$(async function(){
-    await getTable();
-})
+$(async function () {
+    await allUsers();
+    editUser();
+    deleteUser();
+});
 
-const url = 'http://localhost:8080/api/admin';
-
-const fetchUser = {
-    head: {
-        'Accept': 'application/json',
-        'Content-type': 'application/json',
-        'Referer': null
-    },
-
-    getUsers: async () => await fetch(`/api/admin/users`),
-    getUser: async (id) => await fetch(`/api/admin/user/${id}`),
-    updateUser: async (id, user) => await fetch(`/api/admin/user/${id}`, {
-        method: 'PATCH',
-        headers: fetchUser.head,
-        body: JSON.stringify(user)
-    }),
-    deleteUser: async (id) => await fetch(`/api/admin/user/${id}`, {
-        method: 'DELETE',
-        headers: fetchUser.head
-    }),
+async function getUser(id) {
+    let url = "http://localhost:8080/api/admin/user/" + id;
+    let response = await fetch(url);
+    return await response.json();
 }
 
-async function getTable() {
-    let table = $('#users-table-show tbody');
-    table.empty();
+// UsersTable
 
-    await fetchUser.getUsers()
-        .then(response => response.json())
-        .then(users => {
-            users.forEach(user => {
-                let rolesUser = "";
-                for (let role of user.roles) {
-                    rolesUser += role.roleName; //value
-                    rolesUser += " ";
-                }
-                let usersTable =
-                    `$(<tr >
-                        <td>${user.id}</td>
-                        <td>${user.name}</td>
-                        <td>${user.lastName}</td>
-                        <td>${user.age}</td>
-                        <td>${user.username}</td>
-                        <td>${rolesUser}</td>
-                        <td><a href="/api/admin/user/${user.id}"  class="btn btn-info eBtn">Edit</a></td>
-                        <td><a href="/api/admin/user/${user.id}"  class="btn btn-danger dBtn">Delete</a></td>
-                    </tr>)`;
-                table.append(usersTable);
+const tbody = $('#tableBodyAdmin');
+async function allUsers() {
+    tbody.empty()
+    fetch("http://localhost:8080/api/admin/users")
+        .then(res => res.json())
+        .then(data => {
+            data.forEach(user => {
+                let usersTable = `$(
+                        <tr>
+                            <td>${user.id}</td>
+                            <td>${user.name}</td>
+                            <td>${user.lastName}</td>
+                            <td>${user.age}</td>
+                            <td>${user.username}</td>
+                            <td>${user.roles.map(role => " " + role.roleName)}</td>
+                            <td>
+                                <button type="button" class="btn btn-info" data-bs-toggle="modal" id="editButton"
+                                data-action="editModal"  data-id="${user.id}" data-bs-target="#editModal">Edit</button>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" id="deleteButton"
+                                data-action="deleteModal" data-id="${user.id}" data-bs-target="#deleteModal">Delete</button>
+                            </td>
+                        </tr>)`;
+                tbody.append(usersTable);
             })
         })
-    $(' .table .eBtn').on('click',  function (event) {
-        event.preventDefault();
-        const href = $(this).attr('href');
-        $.get(href, function (user) {
-            modalUpdateUser(user.id);
-        });
-        $(' .editModalClass #editModal').modal('show');
-    });
-
-    $(' .table .dBtn').on('click', function (event) {
-        event.preventDefault();
-        const href = $(this).attr('href');
-        $.get(href, function (user) {
-            modalDeleteUser(user.id);
-        });
-        $(' .deleteModalClass #deleteModal').modal('show');
-    });
 }
 
+// Edit
 
+function editUser() {
+    const editForm = document.forms["editUserForm"];
 
-async function modalUpdateUser(id) {
-    let modal = $('#editModal');
-
-    await fetchUser.getUser(id)
-        .then(response => response.json())
-        .then(user => {
-            let modalBody =
-                `<div class="mb-3">
-                      <label for="idEdit"
-                             class="col-form-label"><b>ID</b></label>
-                      <input type="text"
-                             value="${user.id}" name="id"
-                             class="form-control" id="idEdit"
-                             readonly/>
-                </div>
-                <div class="mb-3">
-                     <label for="nameEdit"
-                            class="col-form-label"><b>First Name</b></label>
-                     <input type="text"
-                            value="${user.name}" name="name"
-                            class="form-control" id="nameEdit"
-                            required minlength="2" maxlength="20"/>
-                </div>
-                <div class="mb-3">
-                     <label for="lastNameEdit"
-                            class="col-form-label"><b>Last Name</b></label>
-                     <input type="text"
-                            value="${user.lastName}"
-                            name="lastName"
-                            class="form-control" id="lastNameEdit"
-                            required minlength="2" maxlength="20"/>
-                </div>
-                <div class="mb-3">
-                     <label for="ageEdit"
-                            class="col-form-label"><b>Age</b></label>
-                     <input type="text"
-                            value="${user.age}"
-                            name="age"
-                            class="form-control" id="ageEdit"
-                            required minlength="2" maxlength="20"/>
-                </div>
-                <div class="mb-3">
-                     <label for="usernameEdit"
-                            class="col-form-label"><b>Email</b></label>
-                     <input type="email"
-                            value="${user.username}"
-                            name="username"
-                            class="form-control" id="usernameEdit"/>
-                </div>
-                <div class="mb-3">
-                     <label for="passEdit"
-                            class="col-form-label"><b>Password</b></label>
-                     <input type="password"
-                            name="password"
-                            value="${user.password}"
-                            class="form-control" id="passEdit"
-                            required minlength="2" maxlength="20"/>
-                </div>
-                <div class="mb-3">
-                     <label for="rolesEdit"><b>Role</b></label>
-                     <select class="form-control" id="rolesEdit"
-                             name="roles"
-                             multiple="multiple">
-                         <option value="1">USER</option>
-                         <option value="2">ADMIN</option>
-                     </select>
-                </div>
-                     `
-            modal.find(' .modal-body').append(modalBody);
-
-            let modalFooter =
-                `<button type="button" class="btn btn-secondary buttonClose" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary buttonUpdate">Edit</button>`;
-            modal.find(' .modal-footer').append(modalFooter);
-        })
-
-    modal.on('hide.bs.modal', function (){
-        $('.modal-body').html('');
-        $('.modal-footer').html('');
-    });
-    $('.modal-content .buttonUpdate').on('click', function (){
-        let id = modal.find('#idEdit').val();
-        let idRole = modal.find('select[name=rolesId]').val();
-
-        let updatedUser = {
-            id: id,
-            name: modal.find('#nameEdit').val(),
-            lastName: modal.find('#lastNameEdit').val(),
-            age: modal.find('#ageEdit').val(),
-            username: modal.find('#usernameEdit').val(),
-            password: modal.find('#passwordEdit').val(),
-            roles: idRole
+    editForm.addEventListener("submit", ev => {
+        ev.preventDefault();
+        let editUserRoles = [];
+        for (let i = 0; i < editForm.roles.options.length; i++) {
+            if (editForm.roles.options[i].selected) {
+                editUserRoles.push({
+                    id: editForm.roles.options[i].value,
+                    role: editForm.roles.options[i].text
+                })
+            }
         }
 
-        fetchUser.updateUser(id, updatedUser);
-        setTimeout(getTable, 500);
-        modal.modal('hide');
-    })
-    getSelection();
-}
-
-async function modalDeleteUser(id) {
-    let modal = $('#deleteModal');
-
-    await fetchUser.getUser(id)
-        .then(response => response.json())
-        .then(user => {
-            let modalBody =
-                `<div class="mb-3">
-                    <label htmlFor="idDelete"
-                           class="col-form-label"><b>ID</b></label>
-                    <input type="text"
-                           value="${user.id}" name="id"
-                           class="form-control" id="idDelete"
-                           disabled/>
-                </div>
-                <div class="mb-3">
-                    <label htmlFor="nameDelete"
-                           class="col-form-label"><b>First Name</b></label>
-                    <input type="text"
-                           value="${user.name}" name="name"
-                           class="form-control" id="nameDelete"
-                           required minLength="2" maxLength="20"
-                           disabled/>
-                </div>
-                <div class="mb-3">
-                    <label htmlFor="lastNameDelete"
-                           class="col-form-label"><b>Last Name</b></label>
-                    <input type="text"
-                           value="${user.lastName}"
-                           name="lastName"
-                           class="form-control"
-                           id="lastNameDelete"
-                           required minLength="2" maxLength="20"
-                           disabled/>
-                </div>
-                <div class="mb-3">
-                    <label htmlFor="ageDelete"
-                           class="col-form-label"><b>Age</b></label>
-                    <input type="text"
-                           value="${user.age}"
-                           name="age"
-                           class="form-control" id="ageDelete"
-                           required minLength="2" maxLength="20"
-                           disabled/>
-                </div>
-                <div class="mb-3">
-                    <label htmlFor="usernameDelete"
-                           class="col-form-label"><b>Email</b></label>
-                    <input type="email"
-                           value="${user.username}"
-                           name="username"
-                           class="form-control"
-                           id="usernameDelete"
-                           disabled/>
-                </div>
-                <div class="mb-3">
-                    <label htmlFor="rolesDelete"><b>Role</b></label>
-                    <select class="form-control"
-                            id="rolesDelete"
-                            name="roles"
-                            multiple="multiple" disabled>
-                        <option value="1">USER</option>
-                        <option value="2">ADMIN</option>
-
-                    </select>
-                </div>
-            `
-            modal.find(' .modal-body').append(modalBody);
-
-            let modalFooter =
-                `<button type="button" class="btn btn-secondary buttonClose" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-danger buttonDelete">Delete</button>`;
-            modal.find(' .modal-footer').append(modalFooter);
+        fetch("http://localhost:8080/api/admin/user/" + editForm.id.value, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: editForm.id.value,
+                name: editForm.name.value,
+                lastName: editForm.lastName.value,
+                age: editForm.age.value,
+                username: editForm.username.value,
+                password: editForm.password.value,
+                roles: editUserRoles
+            })
+        }).then(() => {
+            $('#buttonClose').click();
+            allUsers();
         })
-
-    modal.on('hide.bs.modal', function (){
-        $('.modal-body').html('');
-        $('.modal-footer').html('');
-    });
-    $('.modal-content .buttonDelete').on('click', function (){
-
-        fetchUser.deleteUser(id);
-        setTimeout(getTable, 500);
-        modal.modal('hide');
     })
-    getSelection();
 }
 
-function getRoles(formRole) {
-    return Array.from(formRole)
-        .filter(option => option.selected)
-        .map(option => option.value)
-        .map(value => {
-            return value === 'ROLE_ADMIN' ? {id: 1, role: 'ROLE_ADMIN'} : {id: 2, role: 'ROLE_USER'};
+$('#editModal').on('show.bs.modal', ev => {
+    let button = $(ev.relatedTarget);
+    let id = button.data('id');
+    showEditModal(id);
+})
+
+async function showEditModal(id) {
+    $('#rolesEdit').empty();
+    let user = await getUser(id);
+    let form = document.forms["editUserForm"];
+    form.id.value = user.id;
+    form.name.value = user.name;
+    form.lastName.value = user.lastName;
+    form.age.value = user.age;
+    form.username.value = user.username;
+    form.password.value = user.password;
+
+    await fetch("http://localhost:8080/api/admin/roles")
+        .then(res => res.json())
+        .then(roles => {
+            roles.forEach(role => {
+                let selectedRole = false;
+                for (let i = 0; i < user.roles.length; i++) {
+                    if (user.roles[i].roleName === role.roleName) {
+                        selectedRole = true;
+                        break;
+                    }
+                }
+                let el = document.createElement("option");
+                el.text = role.roleName;
+                el.value = role.id;
+                if (selectedRole) el.selected = true;
+                $('#rolesEdit')[0].appendChild(el);
+            })
         })
 }
+
+// Delete
+
+function deleteUser() {
+    const deleteForm = document.forms["deleteUserForm"];
+
+    deleteForm.addEventListener("submit", ev => {
+        ev.preventDefault();
+
+        fetch("http://localhost:8080/api/admin/user/" + deleteForm.id.value, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(() => {
+            $('#buttonCloseDelete').click();
+            allUsers();
+        })
+    })
+}
+
+$('#deleteModal').on('show.bs.modal', ev => {
+    let button = $(ev.relatedTarget);
+    let id = button.data('id');
+    showDeleteModal(id);
+})
+
+async function showDeleteModal(id) {
+    $('#deleteRoles').empty();
+    let user = await getUser(id);
+    let form = document.forms["deleteUserForm"];
+
+    form.id.value = user.id;
+    form.name.value = user.name;
+    form.lastName.value = user.lastName;
+    form.age.value = user.age;
+    form.username.value = user.username;
+
+    await fetch("http://localhost:8080/api/admin/roles")
+        .then(res => res.json())
+        .then(roles => {
+            roles.forEach(role => {
+                let selectedRole = false;
+                for (let i = 0; i < user.roles.length; i++) {
+                    if (user.roles[i].roleName === role.roleName) {
+                        selectedRole = true;
+                        break;
+                    }
+                }
+                let el = document.createElement("option");
+                el.text = role.roleName;
+                el.value = role.id;
+                if (selectedRole) el.selected = true;
+                $('#rolesDelete')[0].appendChild(el);
+            })
+        })
+}
+
+

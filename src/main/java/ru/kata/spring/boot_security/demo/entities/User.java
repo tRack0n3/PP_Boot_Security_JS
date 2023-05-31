@@ -43,9 +43,7 @@ public class User implements UserDetails {
     @NotEmpty(message = "Email should be not empty")
     private String username;
 
-    @Column(name = "password", nullable = false)
-//    @NotEmpty(message = "Password should be not empty")
-//    @Min(value = 4, message = "Password length should be greater than 4")
+    @Column(name = "password")
     private String password;
 
 
