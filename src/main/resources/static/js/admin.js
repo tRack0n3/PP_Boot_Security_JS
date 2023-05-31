@@ -3,7 +3,7 @@ $(async function(){
     await getTable();
 })
 
-let roles = document.getElementById('roles');
+const url = 'http://localhost:8080/api/admin';
 
 const fetchUser = {
     head: {
@@ -22,7 +22,7 @@ const fetchUser = {
     deleteUser: async (id) => await fetch(`/api/admin/user/${id}`, {
         method: 'DELETE',
         headers: fetchUser.head
-    })
+    }),
 }
 
 async function getTable() {
@@ -33,21 +33,22 @@ async function getTable() {
         .then(response => response.json())
         .then(users => {
             users.forEach(user => {
-                let rolesUser ='';
+                let rolesUser = "";
                 for (let role of user.roles) {
-                    rolesUser += role.value;
-                    rolesUser += ' ';
+                    rolesUser += role.roleName; //value
+                    rolesUser += " ";
                 }
                 let usersTable =
-                    `$(<tr th:object="${user}">
+                    `$(<tr >
                         <td>${user.id}</td>
                         <td>${user.name}</td>
                         <td>${user.lastName}</td>
                         <td>${user.age}</td>
                         <td>${user.username}</td>
                         <td>${rolesUser}</td>
-                        <td><a href="/api/admin/user/${user.id}" class="btn btn-primary eBtn">Edit</a></td>
-                        <td><a href="/api/admin/user/${user.id}" class="btn btn-danger dBtn">Delete</a></td>
+                        <td><a href="/api/admin/user/${user.id}"  class="btn btn-info eBtn">Edit</a></td>
+                        /*href="/api/admin/user/{user.id}"*/
+                        <td><a href="/api/admin/user/${user.id}"  class="btn btn-danger dBtn">Delete</a></td>
                     </tr>)`;
                 table.append(usersTable);
             })
@@ -70,6 +71,8 @@ async function getTable() {
         $(' .deleteModalClass #deleteModal').modal('show');
     });
 }
+
+
 
 async function modalUpdateUser(id) {
     let modal = $('#editModal');
@@ -134,16 +137,15 @@ async function modalUpdateUser(id) {
                      <select class="form-control" id="rolesEdit"
                              name="roles"
                              multiple="multiple">
-                     <option foreach="role : ${user.roles}"
-                             value="${role}"
-                             text="${role}">Role name</option>
+                         <option value="ROLE_USER">USER</option>
+                         <option value="ROLE_ADMIN">ADMIN</option>
                      </select>
                 </div>
                      `
             modal.find(' .modal-body').append(modalBody);
 
             let modalFooter =
-                `<button type="button" class="btn btn-secondary buttonClose" data-dismiss="modal">Close</button>
+                `<button type="button" class="btn btn-secondary buttonClose" data-bs-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary buttonUpdate">Edit</button>`;
             modal.find(' .modal-footer').append(modalFooter);
         })
@@ -180,75 +182,70 @@ async function modalDeleteUser(id) {
         .then(response => response.json())
         .then(user => {
             let modalBody =
-                `<div className="mb-3">
+                `<div class="mb-3">
                     <label htmlFor="idDelete"
-                           className="col-form-label"><b>ID</b></label>
+                           class="col-form-label"><b>ID</b></label>
                     <input type="text"
-                           th:value="${user.id}" name="id"
-                           className="form-control" id="idDelete"
+                           value="${user.id}" name="id"
+                           class="form-control" id="idDelete"
                            disabled/>
                 </div>
-                <div className="mb-3">
+                <div class="mb-3">
                     <label htmlFor="nameDelete"
-                           className="col-form-label"><b>First
-                        Name</b></label>
+                           class="col-form-label"><b>First Name</b></label>
                     <input type="text"
-                           th:value="${user.name}" name="name"
-                           className="form-control" id="nameDelete"
+                           value="${user.name}" name="name"
+                           class="form-control" id="nameDelete"
                            required minLength="2" maxLength="20"
                            disabled/>
                 </div>
-                <div className="mb-3">
+                <div class="mb-3">
                     <label htmlFor="lastNameDelete"
-                           className="col-form-label"><b>Last
-                        Name</b></label>
+                           class="col-form-label"><b>Last Name</b></label>
                     <input type="text"
-                           th:value="${user.lastName}"
+                           value="${user.lastName}"
                            name="lastName"
-                           className="form-control"
+                           class="form-control"
                            id="lastNameDelete"
                            required minLength="2" maxLength="20"
                            disabled/>
                 </div>
-                <div className="mb-3">
-                    <label htmlFor="ageEdit"
-                           className="col-form-label"><b>Age</b></label>
+                <div class="mb-3">
+                    <label htmlFor="ageDelete"
+                           class="col-form-label"><b>Age</b></label>
                     <input type="text"
-                           th:value="${user.age}"
+                           value="${user.age}"
                            name="age"
-                           className="form-control" id="ageDelete"
+                           class="form-control" id="ageDelete"
                            required minLength="2" maxLength="20"
                            disabled/>
                 </div>
-                <div className="mb-3">
-                    <label htmlFor="UsernameDelete"
-                           className="col-form-label"><b>Email</b></label>
+                <div class="mb-3">
+                    <label htmlFor="usernameDelete"
+                           class="col-form-label"><b>Email</b></label>
                     <input type="email"
-                           th:value="${user.username}"
+                           value="${user.username}"
                            name="username"
-                           className="form-control"
-                           id="UsernameDelete"
+                           class="form-control"
+                           id="usernameDelete"
                            disabled/>
                 </div>
-                <div className="mb-3">
+                <div class="mb-3">
                     <label htmlFor="rolesDelete"><b>Role</b></label>
-                    <select className="form-control"
+                    <select class="form-control"
                             id="rolesDelete"
                             name="roles"
                             multiple="multiple" disabled>
-                        <option th:each="role : ${rolesList}"
-                                th:value="${role.getId()}"
-                                th:text="${role.getRoleName()}">
-                            Role
-                            name
-                        </option>
+                        <option value="ROLE_USER">USER</option>
+                        <option value="ROLE_ADMIN">ADMIN</option>
+
                     </select>
                 </div>
             `
             modal.find(' .modal-body').append(modalBody);
 
             let modalFooter =
-                `<button type="button" class="btn btn-secondary buttonClose" data-dismiss="modal">Close</button>
+                `<button type="button" class="btn btn-secondary buttonClose" data-bs-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-danger buttonDelete">Delete</button>`;
             modal.find(' .modal-footer').append(modalFooter);
         })
@@ -264,4 +261,13 @@ async function modalDeleteUser(id) {
         modal.modal('hide');
     })
     getSelection();
+}
+
+function getRoles(formRole) {
+    return Array.from(formRole)
+        .filter(option => option.selected)
+        .map(option => option.value)
+        .map(value => {
+            return value === 'ROLE_ADMIN' ? {id: 1, role: 'ROLE_ADMIN'} : {id: 2, role: 'ROLE_USER'};
+        })
 }

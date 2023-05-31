@@ -3,12 +3,13 @@ package ru.kata.spring.boot_security.demo.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import ru.kata.spring.boot_security.demo.entities.Role;
 import ru.kata.spring.boot_security.demo.entities.User;
 import ru.kata.spring.boot_security.demo.services.AdminService;
+import ru.kata.spring.boot_security.demo.services.RoleService;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,10 +19,12 @@ import java.util.Optional;
 public class RestApiController {
 
     private final AdminService adminService;
+    private final RoleService roleService;
 
     @Autowired
-    public RestApiController(AdminService adminService) {
+    public RestApiController(AdminService adminService, RoleService roleService) {
         this.adminService = adminService;
+        this.roleService = roleService;
     }
 
     @GetMapping({"/users"})
@@ -35,6 +38,12 @@ public class RestApiController {
         Optional<User> foundUser = adminService.getUserById(id);
 
         return new ResponseEntity<>(foundUser, HttpStatus.OK);
+    }
+
+    @GetMapping("/roles")
+    public ResponseEntity<Collection<Role>> getRoles() {
+        Collection<Role> roles = roleService.getRolesList();
+        return new ResponseEntity<>(roles, HttpStatus.OK);
     }
 
     // @RequestBody - принимает JSON от клиента и конвертирует его в Java объекты

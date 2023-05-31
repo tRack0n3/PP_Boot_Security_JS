@@ -88,7 +88,8 @@
                         </div>
                         <!--Edit modal-->
                         <div class="editModalClass">
-                            <div class="modal" id="editModal" aria-hidden="true" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+                            <div class="modal fade" id="editModal" aria-hidden="true" tabindex="-1" role="dialog"
+                                 aria-labelledby="exampleModalLabel">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
@@ -96,8 +97,10 @@
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                     aria-label="Close"></button>
                                         </div>
-                                        <div class="modal-body col-md text-center"></div>
-                                        <div class="modal-footer"></div>
+                                        <div class="modal-body col-md text-center">
+                                        </div>
+                                        <div class="modal-footer">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -105,8 +108,8 @@
                         <!--Delete modal-->
                         <div class="deleteModalClass">
                             <div class="modal fade" id="deleteModal" tabindex="-1"
-                                 aria-labelledby="delete" aria-hidden="true">
-                                <div class="modal-dialog">
+                                 aria-labelledby="delete" aria-hidden="true" role="dialog">
+                                <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h1 class="modal-title fs-5" id="delete">Delete
@@ -115,9 +118,11 @@
                                                     data-bs-dismiss="modal"
                                                     aria-label="Close"></button>
                                         </div>
-                                        <div class="modal-body col-md text-center"></div>
+                                        <div class="modal-body col-md text-center">
+                                        </div>
+                                        <div class="modal-footer">
+                                        </div>
                                     </div>
-                                    <div class="modal-footer"></div>
                                 </div>
                             </div>
                         </div>
@@ -168,7 +173,7 @@
                                                placeholder="Password"/>
                                         <br>
                                         <label class="font-weight-bold">Role</label>
-                                        <select id="roles" class="form-control form-control-sm" name="roles" multiple
+                                        <select class="form-control form-control-sm" name="roles" multiple
                                                 style="height: 50px; width: 300px; margin: 0 auto">
                                             <option th:each="role: ${rolesList}"
                                                     th:value="${role.getId()}"
