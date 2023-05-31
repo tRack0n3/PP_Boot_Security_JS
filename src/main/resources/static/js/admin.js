@@ -3,6 +3,7 @@ $(async function () {
     await allUsers();
     editUser();
     deleteUser();
+    newUser();
 });
 
 async function getUser(id) {
@@ -16,7 +17,7 @@ async function getUser(id) {
 const tbody = $('#tableBodyAdmin');
 async function allUsers() {
     tbody.empty()
-    fetch("http://localhost:8080/api/admin/users")
+    fetch("http://localhost:8080/api/admin")
         .then(res => res.json())
         .then(data => {
             data.forEach(user => {
@@ -173,5 +174,53 @@ async function showDeleteModal(id) {
             })
         })
 }
+
+// New user
+
+async function newUser() {
+    await fetch("http://localhost:8080/api/admin/roles")
+        .then(res => res.json())
+        .then(roles => {
+            roles.forEach(role => {
+                let el = document.createElement("option");
+                el.text = role.roleName;
+                el.value = role.id;
+                $('#rolesAdd')[0].appendChild(el);
+            })
+        })
+
+    const form = document.forms["newUserForm"];
+    form.addEventListener('submit', addNewUser)
+
+    function addNewUser(e) {
+        e.preventDefault();
+        let addRoles = [];
+        for (let i = 0; i < form.roles.options.length; i++) {
+            if (form.roles.options[i].selected) addRoles.push({
+                id : form.roles.options[i].value,
+                role : form.roles.options[i].roleName
+            })
+        }
+        fetch("http://localhost:8080/api/admin/new", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name: form.name.value,
+                lastName: form.lastName.value,
+                age: form.age.value,
+                username: form.username.value,
+                password: form.password.value,
+                roles: addRoles
+            })
+        }).then(() => {
+            form.reset();
+            allUsers();
+            $('#home-tab').click();
+        })
+    }
+}
+
 
 

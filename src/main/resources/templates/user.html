@@ -7,9 +7,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <title>UsersPage</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+          crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+    <title>UserPage</title>
 
 
 </head>
@@ -17,9 +22,9 @@
 <nav class="navbar navbar-dark bg-dark">
     <div class="container-fluid">
         <span class="navbar-brand mb-0 h1">
-             <b> <span th:text="${princ.username}"> </span> </b>
-                 <span>with role:</span>
-            <span th:text="${princ.roles}"></span>
+             <b><span sec:authentication="principal.username">Username</span></b>
+                      with roles:
+            <span sec:authentication="principal.authorities">Roles</span>
         </span>
         <form th:action="@{/logout}" th:method="post">
             <button type="submit" class="btn btn-dark">Logout</button>
@@ -30,12 +35,10 @@
     <div class="row">
         <div class="p-0 col-2" style="max-height: 100%; height: 100vh; background-color: white">
             <div class="nav flex-column nav-pills pt-4" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                <a class="nav-link active" id="v-pills-admin-tab" data-bs-toggle="pill" href="#v-pills-admin" role="tab"
-                   aria-controls="v-pills-admin" aria-selected="true"
-                   sec:authorize="hasAuthority('ROLE_ADMIN')">Admin</a>
-                <a class="nav-link active" id="v-pills-user-tab" data-bs-toggle="pill" href="#v-pills-user" role="tab"
-                   aria-controls="v-pills-user" aria-selected="false"
-                   sec:authorize="(hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER'))">User</a>
+                <div sec:authorize="hasAuthority('ROLE_ADMIN')">
+                    <a class="nav-link " id="v-pills-admin-tab" href="/adm" aria-current="page">Admin</a>
+                </div>
+                <a class="nav-link active" sec:authorize="(hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER'))" href="/user">User</a>
             </div>
         </div>
         <div class="col-md-10 bg-light" style="padding-top: 20px; height: 900px">
@@ -57,15 +60,7 @@
                                     <th>Role</th>
                                 </tr>
                                 </thead>
-                                <tbody>
-                                <tr>
-                                    <td th:text="${princ.id}"></td>
-                                    <td th:text="${princ.name}"></td>
-                                    <td th:text="${princ.lastName}"></td>
-                                    <td th:text="${princ.age}"></td>
-                                    <td th:text="${princ.username}"></td>
-                                    <td th:text="${princ.roles}"></td>
-                                </tr>
+                                <tbody id="tBodyUserInformation">
                                 </tbody>
                             </table>
                         </div>
@@ -75,17 +70,8 @@
         </div>
     </div>
 </div>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
+<script type="text/javascript" src="webjars/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript" src="webjars/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="/js/user.js"></script>
 </body>
 </html>

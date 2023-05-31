@@ -14,38 +14,43 @@
 </head>
 <body>
 
-<!--Navigation bar-->
+<!-- Top navigation bar-->
 <nav class="navbar navbar-dark bg-dark">
     <div class="container-fluid">
         <span class="navbar-brand mb-0 h1">
-             <b> <span th:text="${admin.username}"> </span> </b>
-                 <span>with role:</span>
-            <span th:text="${admin.roles}"></span>
+             <b><span sec:authentication="principal.username">Username</span></b>
+                      with roles:
+            <span sec:authentication="principal.authorities">Roles</span>
         </span>
         <form th:action="@{/logout}" th:method="post">
             <button type="submit" class="btn btn-dark">Logout</button>
         </form>
     </div>
 </nav>
-<!--End of navigation bar-->
+<!--End of top navigation bar-->
 
+<!--Left navigation menu-->
 <div class="container-fluid" style="max-height: 100%; height: 100vh; background-color: #f8f9fa">
     <div class="row">
         <div class="p-0 col-2" style="max-height: 100%; height: 100vh; background-color: white">
             <div class="nav flex-column nav-pills pt-4" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                <a class="nav-link active" id="v-pills-admin-tab" data-bs-toggle="pill" href="#v-pills-admin" role="tab"
+                <a class="nav-link active" id="v-pills-admin-tab" data-bs-toggle="list" href="#v-pills-admin" role="tab"
                    aria-controls="v-pills-admin" aria-selected="true"
                    sec:authorize="hasAuthority('ROLE_ADMIN')">Admin</a>
                 <a class="nav-link" id="v-pills-user-tab" data-bs-toggle="pill" href="#v-pills-user" role="tab"
                    aria-controls="v-pills-user" aria-selected="false"
-                   sec:authorize="(hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER'))">User</a>
+                   sec:authorize="(hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER'))" onclick="document.location='/user'">User</a>
             </div>
         </div>
+<!--End of left navigation menu-->
+
+        <!--Admin panel-->
         <div class="col-md-10 bg-light" style="padding-top: 20px; height: 900px">
             <div class="tab-content" id="v-pills-tabContent">
                 <div class="tab-pane fade show active" id="v-pills-admin" role="tabpanel"
                      aria-labelledby="v-pills-admin-tab">
                     <h1 class="h1">Admin panel</h1>
+                    <!--Users table tab-->
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active" id="home-tab"
@@ -54,6 +59,7 @@
                                     aria-controls="home" aria-selected="true">Users table
                             </button>
                         </li>
+                        <!--New user tab-->
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="new-user-tab"
                                     data-bs-toggle="tab" data-bs-target="#newUser"
@@ -61,6 +67,8 @@
                             </button>
                         </li>
                     </ul>
+
+                    <!--Users table-->
                     <div class="tab-content" id="myTabContent">
                         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                             <div class="card">
@@ -102,7 +110,7 @@
                                                     <label for="idEdit"
                                                            class="col-form-label"><b>ID</b></label>
                                                     <input type="text"
-                                                           th:value="${user.id}" th:name="id"
+                                                           name="id"
                                                            class="form-control" id="idEdit"
                                                            readonly/>
                                                 </div>
@@ -110,7 +118,7 @@
                                                     <label for="nameEdit"
                                                            class="col-form-label"><b>First Name</b></label>
                                                     <input type="text"
-                                                           th:value="${user.name}" th:name="name"
+                                                           name="name"
                                                            class="form-control" id="nameEdit"
                                                            required minlength="2" maxlength="20"/>
                                                 </div>
@@ -118,8 +126,7 @@
                                                     <label for="lastNameEdit"
                                                            class="col-form-label"><b>Last Name</b></label>
                                                     <input type="text"
-                                                           th:value="${user.lastName}"
-                                                           th:name="lastName"
+                                                           name="lastName"
                                                            class="form-control" id="lastNameEdit"
                                                            required minlength="2" maxlength="20"/>
                                                 </div>
@@ -127,8 +134,7 @@
                                                     <label for="ageEdit"
                                                            class="col-form-label"><b>Age</b></label>
                                                     <input type="text"
-                                                           th:value="${user.age}"
-                                                           th:name="age"
+                                                           name="age"
                                                            class="form-control" id="ageEdit"
                                                            required minlength="2" maxlength="20"/>
                                                 </div>
@@ -136,25 +142,21 @@
                                                     <label for="usernameEdit"
                                                            class="col-form-label"><b>Email</b></label>
                                                     <input type="email"
-                                                           th:value="${user.username}"
-                                                           th:name="username"
+                                                           name="username"
                                                            class="form-control" id="usernameEdit"/>
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="passEdit"
                                                            class="col-form-label"><b>Password</b></label>
                                                     <input type="password"
-                                                           th:name="password"
-                                                           th:value="${user.password}"
+                                                           name="password"
                                                            class="form-control" id="passEdit"
                                                            required minlength="2" maxlength="20"/>
                                                 </div>
                                                 <div class="mb-3">
-                                                    <label for="rolesEdit" class="font-weight-bold"
-                                                           size="2">Role</label>
-                                                    <select class="form-control" id="rolesEdit" th:name="roles"
-                                                            multiple>
-                                                    </select>
+                                                    <label for="rolesEdit" class="font-weight-bold" size="2"><b>Role</b></label>
+                                                    <select class="form-control" id="rolesEdit" name="roles"
+                                                            multiple></select>
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary "
@@ -188,56 +190,53 @@
                                                     <label htmlFor="idDelete"
                                                            class="col-form-label"><b>ID</b></label>
                                                     <input type="text"
-                                                           th:value="${user.id}" name="id"
+                                                           name="id"
                                                            class="form-control" id="idDelete"
-                                                           disabled/>
+                                                           readonly/>
                                                 </div>
                                                 <div class="mb-3">
                                                     <label htmlFor="nameDelete"
                                                            class="col-form-label"><b>First Name</b></label>
                                                     <input type="text"
-                                                           th:value="${user.name}" name="name"
+                                                           name="name"
                                                            class="form-control" id="nameDelete"
                                                            required minLength="2" maxLength="20"
-                                                           disabled/>
+                                                           readonly/>
                                                 </div>
                                                 <div class="mb-3">
                                                     <label htmlFor="lastNameDelete"
                                                            class="col-form-label"><b>Last Name</b></label>
                                                     <input type="text"
-                                                           th:value="${user.lastName}"
                                                            name="lastName"
                                                            class="form-control"
                                                            id="lastNameDelete"
                                                            required minLength="2" maxLength="20"
-                                                           disabled/>
+                                                           readonly/>
                                                 </div>
                                                 <div class="mb-3">
                                                     <label htmlFor="ageDelete"
                                                            class="col-form-label"><b>Age</b></label>
                                                     <input type="text"
-                                                           th:value="${user.age}"
                                                            name="age"
                                                            class="form-control" id="ageDelete"
                                                            required minLength="2" maxLength="20"
-                                                           disabled/>
+                                                           readonly/>
                                                 </div>
                                                 <div class="mb-3">
                                                     <label htmlFor="usernameDelete"
                                                            class="col-form-label"><b>Email</b></label>
                                                     <input type="email"
-                                                           th:value="${user.username}"
                                                            name="username"
                                                            class="form-control"
                                                            id="usernameDelete"
-                                                           disabled/>
+                                                           readonly/>
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="rolesDelete" class="font-weight-bold"
-                                                           size="2">Role</label>
+                                                           size="2"><b>Role</b></label>
                                                     <select class="form-control" id="rolesDelete" th:name="roles"
                                                             multiple
-                                                            disabled>
+                                                            readonly>
                                                     </select>
                                                 </div>
                                                 <div class="modal-footer">
@@ -255,98 +254,68 @@
                                 </div>
                             </div>
                         </div>
+                        <!--New user tab-->
                         <div class="tab-pane fade" id="newUser">
                             <div class="card">
                                 <h5 class="card-header">Add new user</h5>
                                 <div class="card-body text-center">
-                                    <form th:method="POST" th:action="@{/adm}" th:object="${newUser}">
-                                        <label class="font-weight-bold" for="firstNameNew">First name</label>
-                                        <br>
-                                        <input class="form-control" type="text" required minlength="2"
-                                               maxlength="15"
-                                               th:field="*{name}"
-                                               id="firstNameNew"
-                                               style="height: 30px; width: 300px; margin: 0 auto"
-                                               placeholder="First Name"/>
-                                        <br>
-                                        <label class="font-weight-bold" for="lastNameNew">Last name</label>
-                                        <br>
-                                        <input class="form-control" type="text" required minlength="2"
-                                               maxlength="15"
-                                               th:field="*{lastName}"
-                                               id="lastNameNew"
-                                               style="height: 30px; width: 300px; margin: 0 auto"
-                                               placeholder="Last Name"/>
-                                        <br>
-                                        <label class="font-weight-bold" for="ageNew">Age</label>
-                                        <br>
-                                        <input class="form-control" type="number" step="1" min="0" required
-                                               minlength="1" maxlength="120" th:field="*{age}"
-                                               id="ageNew"
-                                               style="height: 30px; width: 300px; margin: 0 auto"
-                                               placeholder="Age"/>
-                                        <br>
-                                        <label class="font-weight-bold" for="emailNew">Email</label>
-                                        <br>
-                                        <input class="form-control" type="email" th:field="*{username}"
-                                               id="emailNew"
-                                               style="height: 30px; width: 300px; margin: 0 auto"
-                                               placeholder="Email"/>
-                                        <br>
-                                        <label class="font-weight-bold" for="passwordNew">Password</label>
-                                        <br>
-                                        <input class="form-control" type="password" required minlength="3"
-                                               maxlength="15" th:field="*{password}"
-                                               id="passwordNew"
-                                               style="height: 30px; width: 300px; margin: 0 auto"
-                                               placeholder="Password"/>
-                                        <br>
-                                        <label class="font-weight-bold">Role</label>
-                                        <select class="form-control form-control-sm" name="roles" multiple
-                                                style="height: 50px; width: 300px; margin: 0 auto">
-                                            <option th:each="role: ${rolesList}"
-                                                    th:value="${role.getId()}"
-                                                    th:text="${role.getRoleName()}"
-                                                    name="roles">
-                                            </option>
-                                        </select>
-                                        <br/>
+                                    <form id="newUserForm">
+                                        <div class="mb-3">
+                                            <label class="font-weight-bold" for="firstNameNew"><b>First name</b></label>
+                                            <input class="form-control" type="text" required minlength="2" maxlength="15"
+                                                   id="firstNameNew"
+                                                   name="name"
+                                                   style="height: 30px; width: 300px; margin: 0 auto"
+                                                   placeholder="First Name"/>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="font-weight-bold" for="lastNameNew"><b>Last name</b></label>
+                                            <input class="form-control" type="text" required minlength="2"
+                                                   maxlength="15"
+                                                   name="lastName"
+                                                   id="lastNameNew"
+                                                   style="height: 30px; width: 300px; margin: 0 auto"
+                                                   placeholder="Last Name"/>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="font-weight-bold" for="ageNew"><b>Age</b></label>
+                                            <input class="form-control" type="number" step="1" min="0" required
+                                                   minlength="1" maxlength="120"
+                                                   id="ageNew"
+                                                   name="age"
+                                                   style="height: 30px; width: 300px; margin: 0 auto"
+                                                   placeholder="Age"/>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="font-weight-bold" for="emailNew"><b>Email</b></label>
+                                            <br>
+                                            <input class="form-control" type="email"
+                                                   id="emailNew"
+                                                   name="username"
+                                                   style="height: 30px; width: 300px; margin: 0 auto"
+                                                   placeholder="Email"/>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="font-weight-bold" for="passwordNew"><b>Password</b></label>
+                                            <input class="form-control" type="password" required minlength="3"
+                                                   maxlength="15"
+                                                   id="passwordNew"
+                                                   name="password"
+                                                   style="height: 30px; width: 300px; margin: 0 auto"
+                                                   placeholder="Password"/>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="rolesAdd" class="font-weight-bold"><b>Role</b></label>
+                                            <select class="form-control" id="rolesAdd" name="roles"
+                                                    multiple style="height: 50px; width: 300px; margin: 0 auto">
+                                            </select>
+                                        </div>
                                         <div>
                                             <button type="submit" class="btn btn-success">Add new user</button>
                                         </div>
                                     </form>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="v-pills-user" role="tabpanel" aria-labelledby="v-pills-user-tab">
-                    <h1 class="h1">User information-page</h1>
-                    <div class="card">
-                        <h5 class="card-header">About user</h5>
-                        <div class="card-body text-center">
-                            <table class="table table-striped">
-                                <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>First Name</th>
-                                    <th>Last Name</th>
-                                    <th>Age</th>
-                                    <th>Email</th>
-                                    <th>Role</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr th:object="${admin}">
-                                    <td th:text="${admin.id}"></td>
-                                    <td th:text="${admin.name}"></td>
-                                    <td th:text="${admin.lastName}"></td>
-                                    <td th:text="${admin.age}"></td>
-                                    <td th:text="${admin.username}"></td>
-                                    <td th:text="${admin.roles}"></td>
-                                </tr>
-                                </tbody>
-                            </table>
                         </div>
                     </div>
                 </div>
@@ -358,5 +327,6 @@
 <script type="text/javascript" src="webjars/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript" src="webjars/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <script src="/js/admin.js"></script>
+<script src="/js/user.js"></script>
 </html>
 

@@ -16,14 +16,14 @@ import ru.kata.spring.boot_security.demo.util.UserValidator;
 import javax.validation.Valid;
 
 @Controller
-public class AuthController {
+public class AuthenticationController {
 
     private final UserValidator userValidator;
     private final RegistrationService registrationService;
     private final RoleService roleService;
 
     @Autowired
-    public AuthController(UserValidator userValidator, RegistrationService registrationService, RoleService roleService) {
+    public AuthenticationController(UserValidator userValidator, RegistrationService registrationService, RoleService roleService) {
         this.userValidator = userValidator;
         this.registrationService = registrationService;
         this.roleService = roleService;
