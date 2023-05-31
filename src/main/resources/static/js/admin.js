@@ -47,7 +47,6 @@ async function getTable() {
                         <td>${user.username}</td>
                         <td>${rolesUser}</td>
                         <td><a href="/api/admin/user/${user.id}"  class="btn btn-info eBtn">Edit</a></td>
-                        /*href="/api/admin/user/{user.id}"*/
                         <td><a href="/api/admin/user/${user.id}"  class="btn btn-danger dBtn">Delete</a></td>
                     </tr>)`;
                 table.append(usersTable);
@@ -137,8 +136,8 @@ async function modalUpdateUser(id) {
                      <select class="form-control" id="rolesEdit"
                              name="roles"
                              multiple="multiple">
-                         <option value="ROLE_USER">USER</option>
-                         <option value="ROLE_ADMIN">ADMIN</option>
+                         <option value="1">USER</option>
+                         <option value="2">ADMIN</option>
                      </select>
                 </div>
                      `
@@ -236,8 +235,8 @@ async function modalDeleteUser(id) {
                             id="rolesDelete"
                             name="roles"
                             multiple="multiple" disabled>
-                        <option value="ROLE_USER">USER</option>
-                        <option value="ROLE_ADMIN">ADMIN</option>
+                        <option value="1">USER</option>
+                        <option value="2">ADMIN</option>
 
                     </select>
                 </div>
